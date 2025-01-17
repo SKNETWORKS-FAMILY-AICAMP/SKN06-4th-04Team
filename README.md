@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # SKN06-4TH-04Team
 
 

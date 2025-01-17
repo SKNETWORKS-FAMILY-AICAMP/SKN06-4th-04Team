@@ -1,7 +1,7 @@
 # users/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.urls import reverse
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileUpdateForm  # 커스텀 폼 가져오기
 from django.views import View
@@ -41,22 +41,28 @@ def logout_view(request):
 
 @login_required
 def profile(request):
-    user = request.user  # 현재 로그인한 사용자 가져오기
+    user = request.user
     
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=user)
         if form.is_valid():
-            form.save()
+            # 프로필 정보 업데이트
+            user = form.save(commit=False)
+            
+            # 새 비밀번호가 입력된 경우 비밀번호 변경
+            new_password = request.POST.get('new_password')
+            if new_password:
+                user.set_password(new_password)
+                update_session_auth_hash(request, user)  # 세션 유지
+                messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
+            
+            user.save()
             messages.success(request, "프로필이 성공적으로 업데이트되었습니다!")
-            return redirect("profile")  # 성공 후 마이페이지로 리디렉션
+            return redirect("profile")
     else:
-        form = ProfileUpdateForm(instance=user)  # 기존 사용자 정보 가져오기
+        form = ProfileUpdateForm(instance=user)
     
     return render(request, "users/profile.html", {"form": form})
-# class CustomLogoutView(View):
-#     def get(self, request):
-#         logout(request)  # 로그아웃 실행
-
 
 
 

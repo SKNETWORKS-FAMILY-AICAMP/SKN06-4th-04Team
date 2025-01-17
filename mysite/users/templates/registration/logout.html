@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>로그아웃 되었습니다.</h2>
+<p><a href="{% url 'login' %}">다시 로그인</a></p>
+<p><a href="{% url 'home' %}">홈으로 가기</a></p>
+{% endblock %}

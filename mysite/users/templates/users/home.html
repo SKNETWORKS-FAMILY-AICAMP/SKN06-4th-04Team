@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈 페이지</title>
+    <style>
+        /* 버튼 스타일 */
+        button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>홈 페이지</h1>
+    <!-- 로그인한 사용자만 환영 메시지 출력 -->
+    {% if user.is_authenticated %}
+        <p>환영합니다! {{ user.username }}님</p>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">로그아웃</button>
+            <a href="{% url 'profile' %}">마이페이지</a>
+        </form>
+
+        <!-- 채팅 버튼 -->
+        <div id="chat-box">
+            <div id="chat-history">
+                <!-- 대화 내용이 여기에 표시됩니다. -->
+            </div>
+            <input type="text" id="user-message" placeholder="메시지를 입력하세요..." />
+            <button onclick="sendMessage()">보내기</button>
+        </div>
+    {% else %}
+        <p>로그인 후 채팅을 이용하실 수 있습니다.</p>
+        <a href="{% url 'login' %}">로그인</a> | <a href="{% url 'register' %}">회원가입</a>
+        
+        <!-- 비회원 채팅 버튼 추가 -->
+        <form action="{% url 'chat' %}" method="get">
+            <button type="submit">비회원으로 채팅 시작</button>
+        </form>
+    {% endif %}
+</body>
+</html>

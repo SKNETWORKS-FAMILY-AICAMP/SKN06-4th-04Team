@@ -1,0 +1,6 @@
+.env
+/tax
+/vector_store
+.cache_prompt.sqlite
+.cache_prompt_etc.sqlite
+/__pycache__

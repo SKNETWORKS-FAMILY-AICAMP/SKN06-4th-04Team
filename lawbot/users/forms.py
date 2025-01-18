@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 
 # 오류 메시지를 한 곳에 모음
 ERROR_MESSAGES = {
-    "invalid_login": "⚠️ 아이디 또는 비밀번호가 올바르지 않습니다. 대소문자를 확인해주세요.",
+    "invalid_login": "⚠️ 아이디 또는 비밀번호가 올바르지 않습니다.",
     "password_minlength": "⚠️ 비밀번호가 6자리 이상이어야 합니다.",
     "password_mismatch": "⚠️ 비밀번호가 일치하지 않습니다.",
     "password_confirmation_required": "⚠️ 비밀번호 확인을 입력해주세요.",

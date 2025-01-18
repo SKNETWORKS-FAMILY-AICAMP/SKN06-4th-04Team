@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'css/common.css' %}">
     <title>
-      {% block title %}{% endblock title %}
+      {% block title %}Lawbot - 세법 챗봇{% endblock title %}
     </title>
     {% block style %}{% endblock style %}
   </head>
@@ -22,7 +22,7 @@
         <div>
           <a class="nav_user" href="profile">
             <img class="input_check" src="{% static '/img/icon-account.svg' %}">
-            <u href="/profile">{{ user.username }}</u>님
+            <u href="/profile">{{ user.username }}님</u>
           </a>
             <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}

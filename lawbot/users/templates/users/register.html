@@ -1,13 +1,27 @@
 {% extends "layout.html" %}
+{% block title %}Lawbot - 회원가입{% endblock %}
 
+{% block style %}
+  <style>
+    #register {
+      margin-top: 8vh;
+    }
+  </style>
+{% endblock style %}
 
 {% block content %}
-<h2>회원가입</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}  <!-- 폼을 표시 -->
-    <button type="submit">회원가입</button>
-</form>
-
-<p>이미 계정이 있으신가요? <a href="{% url 'home' %}">로그인</a></p>
+<div id="register">
+      <h2 class="text-center font-primary">회원가입</h2>
+    <div class="form_wrap">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <!-- 폼을 표시 -->
+        <button  class="btn btn-primary" type="submit">회원가입</button>
+      </form>
+    </div>
+  </div>
+  <p class="text-center">이미 계정이 있으신가요?
+    <a href="{% url 'home' %}" class="font-primary fw-500">로그인</a>
+  </p>
 {% endblock %}

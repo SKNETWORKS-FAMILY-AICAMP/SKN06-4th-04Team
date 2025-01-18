@@ -3,21 +3,21 @@
 {% block style %}
   <style>
     .chat-container {
-      width: 80%;
-      margin: 0 auto;
-      max-width: 600px;
+      width: 100%;
+      background: var(--background-light-blue);
+      height: calc(100vh - 100px);
+      min-height: 100px;
     }
 
     .chat-box {
-      border: 1px solid #ccc;
-      padding: 10px;
-      height: 300px;
+      height: 100%;
       overflow-y: auto;
-      margin-bottom: 10px;
     }
 
     .input-container {
       display: flex;
+      column-gap: 0.5rem;
+      margin: 0.5rem;
     }
 
     .input-container input {
@@ -26,92 +26,101 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
-    .input-container button {
+    .input-container input:focus {
+      outline: none;
+    }
+    .input-container .btn.btn-primary {
+      width: 70px;
       padding: 10px;
       border: none;
-      background-color: #4CAF50;
       color: white;
       border-radius: 4px;
       cursor: pointer;
-    }
-
-    .input-container button:hover {
-      background-color: #45a049;
+      line-height: initial;
     }
 
     .chat-message {
-      margin: 5px 0;
+      margin: 0.5rem 1rem;
     }
 
-    .user-message {
-      font-weight: bold;
-    }
+    .user-message {}
   </style>
 {% endblock %}
 
 {% block content %}
   <div class="chat-container">
-    <h2>세법 챗봇</h2>
     <div id="chat-box" class="chat-box"></div>
     <div class="input-container">
-      <input type="text" id="user-input" placeholder="질문을 입력하세요...">
-      <button id="send-button">전송</button>
+      <input type="text" id="user-input" ">
+      <button id="send-button" class="btn btn-primary">전송</button>
     </div>
   </div>
 {% endblock %}
 
 {% block script %}
-<script>
-  const sendButton = document.getElementById("send-button");
-  const userInput = document.getElementById("user-input");
-  const chatBox = document.getElementById("chat-box");
+  <script>
+    const sendButton = document.getElementById("send-button");
+    const userInput = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
 
-  sendButton.addEventListener("click", async () => {
-    const question = userInput
-      .value
-      .trim();
-    if (!question) 
-      return;
-    
-    // 사용자 질문 표시
-    const userMessage = document.createElement("div");
-    userMessage
-      .classList
-      .add("chat-message", "user-message");
-    userMessage.textContent = "사용자: " + question;
-    chatBox.appendChild(userMessage);
-
-    // 서버 요청
-    try {
-      const response = await fetch("/chat/get-answer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({question})
-      });
-      const data = await response.json();
-
-      // 챗봇 응답 표시
-      const botMessage = document.createElement("div");
-      botMessage
+    async function askQuestion() {
+      const question = userInput
+        .value
+        .trim();
+      if (!question) 
+        return;
+      
+      // 사용자 질문 표시
+      const userMessage = document.createElement("div");
+      userMessage
         .classList
-        .add("chat-message");
-      botMessage.textContent = data.answer || "오류: " + (
-      data.error || "알 수 없는 오류가 발생했습니다.");
-      chatBox.appendChild(botMessage);
-    } catch (error) {
-      const errorMessage = document.createElement("div");
-      errorMessage
-        .classList
-        .add("chat-message");
-      errorMessage.textContent = "서버와 통신 중 오류가 발생했습니다.";
-      chatBox.appendChild(errorMessage);
+        .add("chat-message", "user-message");
+      userMessage.textContent = "사용자: " + question;
+      chatBox.appendChild(userMessage);
+      userInput.value = "";
+      userInput.disabled = true;
+      
+
+      // 서버 요청
+      try {
+        const response = await fetch("/chat/get-answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({question})
+        });
+        const data = await response.json();
+
+        // 챗봇 응답 표시
+        const botMessage = document.createElement("div");
+        botMessage
+          .classList
+          .add("chat-message");
+        botMessage.textContent = data.answer || "오류: " + (
+        data.error || "알 수 없는 오류가 발생했습니다.");
+        chatBox.appendChild(botMessage);
+      } catch (error) {
+        const errorMessage = document.createElement("div");
+        errorMessage
+          .classList
+          .add("chat-message");
+        errorMessage.textContent = "서버와 통신 중 오류가 발생했습니다.";
+        chatBox.appendChild(errorMessage);
+      }
+
+      userInput.disabled = false;
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    userInput.value = ""; // 입력 초기화
-    chatBox.scrollTop = chatBox.scrollHeight; // 스크롤 아래로 이동
-  });
-</script>
-{% endblock  %}
+    sendButton.addEventListener("click", async () => {
+      await askQuestion()
+    });
+
+    userInput.addEventListener('keydown', async (e)=> {
+      if (e.key === "Enter" && !e.shiftKey) {
+        await askQuestion()
+      };
+    }, true);
+  </script>
+{% endblock %}

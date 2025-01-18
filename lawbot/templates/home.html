@@ -1,14 +1,35 @@
 <!-- templates/home.html -->
 {% extends "layout.html" %}
 
+{% block style %}
+  <style>
+    #login {
+      margin-top: 25vh;
+    }
+
+    #login h2 {
+      font-size: 24px;
+      margin-bottom: 1rem;
+    }
+
+    #login p {
+      text-align: center;
+    }
+  </style>
+{% endblock style %}
+
 {% block content %}
-  <h2>로그인</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">로그인</button>
-  </form>
-  <p>계정이 없으신가요?
-    <a href="{% url 'register' %}">회원가입</a>
-  </p>
+  <div id="login">
+    <h2 class="text-center font-primary">로그인</h2>
+    <div class="form_wrap">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button class="btn btn-primary" type="submit">로그인</button>
+      </form>
+      <p>계정이 없으신가요?
+        <a href="{% url 'register' %}" class="font-primary fw-500">회원가입</a>
+      </p>
+    </div>
+  </div>
 {% endblock %}

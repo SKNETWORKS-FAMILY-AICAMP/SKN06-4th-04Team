@@ -14,7 +14,7 @@ class User(AbstractUser):
         max_length=11,
         validators=[
             RegexValidator(
-                regex=r"^\d{10,11}$", message="전화번호는 '-' 없이 입력해 주세요."
+                regex=r"^\d{10,11}$", message="⚠️전화번호는 '-' 없이 입력해 주세요."
             )
         ],
         null=True,

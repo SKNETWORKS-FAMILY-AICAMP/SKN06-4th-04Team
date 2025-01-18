@@ -33,9 +33,7 @@ body {
 .fw-500 {
   font-weight: 500;
 }
-.hide{
-  display: none!important;
-}
+
 
 /* form */
 .form_wrap {

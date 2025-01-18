@@ -1,0 +1,13 @@
+<!-- users/templates/users/profile.html -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h2>내 프로필</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+    </form>
+
+</div>
+{% endblock %}

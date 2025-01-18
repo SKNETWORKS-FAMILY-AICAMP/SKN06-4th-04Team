@@ -1,0 +1,49 @@
+<!-- templates/layout.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <title>
+      {% block title %}{% endblock title %}
+    </title>
+    {% block style %}{% endblock style %}
+  </head>
+
+  <body>
+    {% if user.is_authenticated %}
+      <nav>
+        <button class="btn btn-text font-primary" type="button" onclick="newChat()">+ 새로운 대화 시작하기</button>
+        <div>
+          <a class="nav_user" href="profile">
+            <img class="input_check" src="{% static '/img/icon-account.svg' %}">
+            <u href="/profile">{{ user.username }}</u>님
+          </a>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn btn-text " type="submit">로그아웃</button>
+          </form>
+        </div>
+
+      </nav>
+    {% endif %}
+
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+
+    {% block script %}{% endblock script %}
+  </body>
+
+  <script>
+    function newChat() {
+      console.log("새로운 대화 시작 fnc 실행")
+    }
+  </script>
+
+</html>

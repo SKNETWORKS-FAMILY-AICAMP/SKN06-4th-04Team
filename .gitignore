@@ -1,6 +1,15 @@
 .env
 /tax
-/vector_store
 .cache_prompt.sqlite
 .cache_prompt_etc.sqlite
-/__pycache__
+
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media

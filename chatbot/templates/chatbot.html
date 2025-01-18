@@ -42,7 +42,7 @@
 
             // 서버 요청
             try {
-                const response = await fetch("/get-answer", {
+                const response = await fetch("/chat/get-answer", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ question }),

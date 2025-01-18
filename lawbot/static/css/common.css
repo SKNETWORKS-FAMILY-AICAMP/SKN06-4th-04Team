@@ -1,0 +1,147 @@
+:root {
+  --primary-color: #376af0;
+  --color-red: #d93737;
+  --color-dark-gray: #376af0;
+  --border-gray-01: #e0e0e0;
+  --background-light-blue: #eaeef7;
+}
+body {
+  margin: 0;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* class  */
+.font-primary {
+  color: var(--primary-color);
+}
+.font-red {
+  color: var(--color-red);
+}
+.text-center {
+  text-align: center;
+}
+.flex {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
+/* form */
+.form_wrap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  width: 100vw;
+  height: 100%;
+  max-width: 360px;
+  margin: 1rem auto;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+.form-button {
+  display: flex;
+  column-gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.form-button .btn {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+}
+/* input */
+.input_cont {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+  width: 100%;
+}
+.input_cont .input_label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input_label .input_check {
+  width: 22px;
+}
+.input_cont label {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.input_cont input {
+  border: 1px solid var(--border-gray-01);
+  padding: 0 12px;
+  line-height: 38px;
+  border-radius: 3px;
+}
+.input_cont > .flex input {
+  width: 30%;
+}
+/* button */
+.btn,
+a.btn {
+  line-height: 2.25rem;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn:disabled {
+  cursor: default !important;
+}
+.btn.btn-primary,
+a.btn.btn-primary {
+  background: var(--primary-color);
+  border: 0;
+  color: #fff;
+}
+a.btn {
+  text-decoration: none;
+}
+.btn.btn-text,
+a.btn.btn-text {
+  background: none;
+  
+}
+.btn.btn-outlined-primary,
+a.btn.btn-outlined-primary {
+  background: #fff;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.profile_img {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* nav */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-gray-01);
+}
+nav > button.font-primary {
+  font-weight: 600;
+}
+nav > div {
+  display: flex; 
+  column-gap: 1rem;
+}
+nav .nav_user {
+  display: flex; 
+  align-items: center;
+  column-gap: 2px;
+  cursor: pointer;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+nav .nav_user img {
+  width: 28px;
+}
+nav .nav_user u {
+  margin-left: .25rem;
+}

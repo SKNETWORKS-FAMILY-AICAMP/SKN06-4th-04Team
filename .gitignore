@@ -1,4 +1,5 @@
 .env
+/tax
 .cache_prompt.sqlite
 .cache_prompt_etc.sqlite
 

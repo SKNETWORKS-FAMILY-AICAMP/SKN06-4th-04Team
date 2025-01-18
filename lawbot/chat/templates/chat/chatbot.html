@@ -17,7 +17,7 @@
     .input-container {
       display: flex;
       column-gap: 0.5rem;
-      margin: 0.5rem;
+      margin-top:6px;
     }
 
     .input-container input {
@@ -26,9 +26,11 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     .input-container input:focus {
       outline: none;
     }
+
     .input-container .btn.btn-primary {
       width: 70px;
       padding: 10px;
@@ -70,7 +72,6 @@
       if (!question) 
         return;
       
-      // 사용자 질문 표시
       const userMessage = document.createElement("div");
       userMessage
         .classList
@@ -81,7 +82,6 @@
       userInput.disabled = true;
       
 
-      // 서버 요청
       try {
         const response = await fetch("/chat/get-answer", {
           method: "POST",
@@ -92,7 +92,6 @@
         });
         const data = await response.json();
 
-        // 챗봇 응답 표시
         const botMessage = document.createElement("div");
         botMessage
           .classList

@@ -93,9 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'OPTIONS': {'min_length': 6},  # 최소 길이 6자로 변경 (기본값 8자)
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]

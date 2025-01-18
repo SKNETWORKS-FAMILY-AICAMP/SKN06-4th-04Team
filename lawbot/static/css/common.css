@@ -27,7 +27,7 @@ body {
 .font-red {
   color: var(--color-red);
 }
-.fw-500{
+.fw-500 {
   font-weight: 500;
 }
 
@@ -43,10 +43,10 @@ body {
   padding: 0 12px;
   box-sizing: border-box;
 }
-.form_wrap form  {
+.form_wrap form {
   display: flex;
   flex-direction: column;
-  row-gap: .75rem;
+  row-gap: 0.75rem;
 }
 .form_wrap form > div {
   display: flex;
@@ -54,26 +54,26 @@ body {
   width: 100%;
 }
 .form_wrap form > div label,
-.form_wrap form > div fieldset legend{
+.form_wrap form > div fieldset legend {
   color: var(--color-dark-gray);
 }
 .form_wrap form > div fieldset legend {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
-.form_wrap form > div  input {
+.form_wrap form > div input {
   border: 1px solid var(--border-gray-01);
   padding: 0 12px;
   line-height: 38px;
   border-radius: 3px;
-  margin-top:.5rem;
+  margin-top: 0.5rem;
 }
 .form_wrap form > div fieldset {
   border: 0;
   margin: 0;
   padding: 0;
   display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    column-gap: .5rem;
+  grid-template-columns: 2fr 1fr 1fr;
+  column-gap: 0.5rem;
 }
 .form_wrap form > div fieldset select {
   border: 1px solid var(--border-gray-01);
@@ -81,7 +81,7 @@ body {
   height: 38px;
   border-radius: 3px;
 }
-.form_wrap  .helptext{
+.form_wrap .helptext {
   font-size: 12px;
   color: var(--color-gray);
   margin-top: 4px;
@@ -91,7 +91,7 @@ body {
   align-content: center;
   justify-content: center;
   width: 100%;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   line-height: 2.75rem;
 }
 /* button */
@@ -101,12 +101,12 @@ a.btn {
   border: 0;
   border-radius: 4px;
   cursor: pointer;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
 }
-.btn.btn-text.font-primary:hover{
+.btn.btn-text.font-primary:hover {
   color: var(--secondary-color);
 }
- .btn.btn-primary:hover {
+.btn.btn-primary:hover {
   background-color: var(--secondary-color);
 }
 
@@ -125,7 +125,6 @@ a.btn {
 .btn.btn-text,
 a.btn.btn-text {
   background: none;
-  
 }
 .btn.btn-outlined-primary,
 a.btn.btn-outlined-primary {
@@ -153,11 +152,11 @@ nav > button.font-primary {
   font-weight: 600;
 }
 nav > div {
-  display: flex; 
+  display: flex;
   column-gap: 1rem;
 }
 nav .nav_user {
-  display: flex; 
+  display: flex;
   align-items: center;
   column-gap: 2px;
   cursor: pointer;
@@ -167,9 +166,9 @@ nav .nav_user img {
   width: 28px;
 }
 nav .nav_user u {
-  margin-left: .25rem;
-  transition: all .15s ease;
+  margin-left: 0.25rem;
+  transition: all 0.15s ease;
 }
-nav .nav_user u:hover{
+nav .nav_user u:hover {
   color: var(--secondary-color);
 }

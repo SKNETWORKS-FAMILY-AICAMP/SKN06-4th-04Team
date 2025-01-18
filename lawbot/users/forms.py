@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.contrib.auth import get_user_model
+from datetime import datetime
+
 
 # 오류 메시지를 한 곳에 모음
 ERROR_MESSAGES = {
@@ -11,23 +13,25 @@ ERROR_MESSAGES = {
 }
 
 class BaseUserForm(forms.ModelForm):
-    name = forms.CharField(label="이름", max_length=30, required=True)
+    current_year = datetime.now().year
+    
+    name = forms.CharField(label="이름", max_length=20, required=True)
     email = forms.EmailField(label="이메일", required=True)
-    birthdate = forms.DateField(label="생년월일", widget=forms.SelectDateWidget(years=range(1900, 2025)))
-    phone_number = forms.CharField(label="휴대폰 번호", max_length=15, required=True)
+    birthdate = forms.DateField(label="생년월일", widget=forms.SelectDateWidget(years=range(1900, current_year)))
+    phone_number = forms.CharField(label="휴대폰번호", max_length=11, required=True)
 
     class Meta:
         model = get_user_model()
         fields = ("email", "name", "birthdate", "phone_number")
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': '010-1234-5678'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': '01011112222'}),
         }
         help_texts = {
             "email": "유효한 이메일 주소를 입력해주세요.",
-            "name": "실명을 입력해주세요.",
+            "name": "이름을 입력해주세요.",
             "birthdate": "생년월일을 선택해주세요.",
-            "phone_number": "휴대폰 번호를 입력해주세요. (예: 010-1234-5678)",
+            "phone_number": "휴대폰번호를 입력해주세요. (예: 01011112222)",
         }
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -48,14 +52,13 @@ class CustomUserCreationForm(BaseUserForm, UserCreationForm):
         widget=forms.PasswordInput,
         help_text="비밀번호를 다시 입력해주세요.",
     )
-
     class Meta(BaseUserForm.Meta):
         fields = BaseUserForm.Meta.fields + ("username", "password1", "password2")
-        labels = {"username": "아이디"}
+        labels = {"username": "아이디"},
+        required=False,
         help_texts = {
             "username": "10자 이하로 입력해주세요. 영어, 숫자 및 @/./+/-/_만 가능합니다.",
         }
-
     error_messages = {
         'username_exists': ERROR_MESSAGES['username_exists'],
         'password_mismatch': ERROR_MESSAGES['password_mismatch'],    
@@ -67,21 +70,14 @@ class ProfileUpdateForm(BaseUserForm, UserChangeForm):
         label="새 비밀번호",
         widget=forms.PasswordInput,
         required=False,
-        help_text="변경을 원하시면 새 비밀번호를 입력해주세요."
+        help_text="새 비밀번호를 입력해주세요."
     )
     confirm_password = forms.CharField(
         label="새 비밀번호 확인",
         widget=forms.PasswordInput,
         required=False,
-        help_text="새 비밀번호를 한 번 더 입력해주세요."
+        help_text="새 비밀번호 확인을 입력해주세요."
     )
-
-    class Meta(BaseUserForm.Meta):
-        fields = BaseUserForm.Meta.fields + ("username",)
-        labels = {"username": "아이디"}
-        help_texts = {
-            "username": "필수 항목. 150자 이하, 문자, 숫자 및 @/./+/-/_만 사용 가능합니다.",
-        }
 
     def clean(self):
         cleaned_data = super().clean()

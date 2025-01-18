@@ -8,13 +8,10 @@ from .forms import (
     CustomAuthenticationForm,
     ProfileUpdateForm,
 ) 
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import User
+
 
 
 class CustomLoginView(auth_views.LoginView):
@@ -37,11 +34,16 @@ def logout_view(request):
     logout(request)
     return redirect(reverse("home"))
 
-
 @login_required
 def profile(request):
     user = request.user
+    form = ProfileUpdateForm(instance=user)
 
+    return render(request, "users/profile.html", {"form": form})
+
+@login_required
+def profile_update(request):
+    user = request.user
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=user)
         if form.is_valid():
@@ -59,4 +61,4 @@ def profile(request):
     else:
         form = ProfileUpdateForm(instance=user)
 
-    return render(request, "users/profile.html", {"form": form})
+    return render(request, "users/profile.html", {"form": form,"edit_mode": True})

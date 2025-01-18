@@ -2,14 +2,83 @@
 {% extends "layout.html" %}
 {% block title %}Lawbot - 내 프로필{% endblock %}
 
-{% block content %}
-<div class="container">
-    <h2>내 프로필</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">수정 완료</button>
-    </form>
+{% block style %}
+  <style>
+    #profile {
+      margin-top: 36px;
+    }
 
-</div>
+    .form-button.flex {
+      flex-direction: row !important;
+    }
+
+    .flex button.btn, .form-button a.btn {
+      width: 50%;
+    }
+
+    input:disabled,
+    select:disabled {
+      background: #f5f5f5;
+      color: #999 !important;
+    }
+
+    #btn-edit-on {
+      display: none;
+      text-align: center;
+    }
+
+    .no-edit #btn-edit-on {
+      display: initial !important;
+    }
+
+    .no-edit #btn-edit-off,
+    .no-edit #btn-submit {
+      display: none !important;
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <div id="profile">
+    <h2 class="text-center font-primary">내 프로필</h2>
+    <div class="form_wrap">
+      <form id="register-form" method="post" data-edit-mode="{{ edit_mode }}">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <a id="btn-edit-on" type="button" class="btn btn-primary" href="/profile/update">정보 수정</a>
+        <div class="form-button flex">
+          <button id="btn-submit" type="submit" class="btn btn-primary">수정</button>
+          <a id="btn-edit-off" type="button" class="btn btn-outlined-primary"href="/profile" >취소</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    const registerForm = document.getElementById("register-form")
+    const inputsAndSelects = registerForm.querySelectorAll("input, select");
+    let editMode = null;
+
+    inital_values = []
+    for (let [index, val] of inputsAndSelects.entries()) {
+        inital_values.push(val.value)
+    }
+    function toggleEditMode() {
+      inputsAndSelects.forEach((element) => element.disabled = !element.disabled);
+      editMode = !editMode
+      registerForm.classList.toggle("no-edit")
+    }
+
+    function cancel_edit(e) {
+
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const editMode = document.getElementById("register-form").getAttribute("data-edit-mode") === "True"
+      if (!editMode) toggleEditMode()
+    })
+  </script>
 {% endblock %}

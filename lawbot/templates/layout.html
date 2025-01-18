@@ -20,11 +20,11 @@
       <nav>
         <button class="btn btn-text font-primary" type="button" onclick="newChat()">+ 새로운 대화 시작하기</button>
         <div>
-          <a class="nav_user" href="profile">
+          <a class="nav_user" href="/profile">
             <img class="input_check" src="{% static '/img/icon-account.svg' %}">
-            <u href="/profile">{{ user.username }}님</u>
+            <u>{{ user.username }}님</u>
           </a>
-            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button class="btn btn-text " type="submit">로그아웃</button>
           </form>

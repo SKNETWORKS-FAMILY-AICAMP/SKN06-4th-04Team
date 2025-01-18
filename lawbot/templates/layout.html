@@ -18,7 +18,8 @@
   <body>
     {% if user.is_authenticated %}
       <nav>
-        <button class="btn btn-text font-primary" type="button" onclick="newChat()">+ 새로운 대화 시작하기</button>
+        <button class="btn btn-text {% if request.path == '/profile/' %}hide{% endif %}" type="button" onclick="newChat()">+ 새로운 대화 시작하기</button>
+        <a class="btn btn-text {% if request.path == '/' %}hide{% endif %}" href="/">홈으로</a>
         <div>
           <a class="nav_user" href="/profile">
             <img class="input_check" src="{% static '/img/icon-account.svg' %}">

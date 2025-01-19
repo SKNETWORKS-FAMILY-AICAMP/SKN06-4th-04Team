@@ -409,8 +409,8 @@ print(f"RougeL점수:{rouge_scores['rougeL']}")
 
 
 ```
-- 결과
-https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/q_a_10pair.png <br/>
+- 결과<br/>
+<img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/q_a_10pair.png"> <br/>
 Semantic Similarity: 0.38 <br/>
 BLEU점수:0.00 <br/>
 Rouge1점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575) <br/>

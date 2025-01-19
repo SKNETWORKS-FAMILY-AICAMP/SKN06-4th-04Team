@@ -1,6 +1,6 @@
 :root {
   --primary-color: #53bfc3;
-  --secondary-color:  #4c9899;
+  --secondary-color: #4c9899;
   --color-red: #d93737;
   --color-gray: #707070;
   --color-dark-gray: #222222;
@@ -33,7 +33,6 @@ body {
 .fw-500 {
   font-weight: 500;
 }
-
 
 /* form */
 .form_wrap {
@@ -99,14 +98,24 @@ body {
   line-height: 2.75rem;
 }
 .form_wrap input[type="file"] {
-  border:0;
+  border: 0;
   background: none;
   padding: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
-.form_wrap input[type="file"]::placeholder{
-  padding-left: .5rem;
+.form_wrap input[type="file"]::placeholder {
+  padding-left: 0.5rem;
 }
 
+.form_wrap input[type="file"]::file-selector-button {
+  background: var(--primary-color);
+  border: 0;
+  color: #fff;
+  margin-right: 10px;
+  width: 80px;
+  border-radius: 4px;
+}
 /* button */
 .btn,
 a.btn {
@@ -173,14 +182,14 @@ nav > .btn.btn-text:hover {
 }
 nav > div {
   display: flex;
-  column-gap: .5rem;
+  column-gap: 0.5rem;
 }
 nav .nav_user {
   cursor: pointer;
   color: var(--primary-color);
 }
 
-nav .nav_user{
+nav .nav_user {
   margin-left: 0.25rem;
   transition: all 0.2s ease;
   line-height: 24px;

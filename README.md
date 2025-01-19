@@ -74,12 +74,17 @@ SKN06-4TH-04Team
 ### 1.4. 디렉토리 구조
 ```
 ├── data 
-│   ├── tax_law : 세법 관련 (70개)
+│   ├── tax_law1 : 세법 관련 (12개)
 │       ├── 개별소비세법.pdf  
 │       ├── 개별소비세법_시행규칙.pdf
 │       ├── 개별소비세법_시행령.pdf  
-│       ├── 과세자료의_제출_및_관리에_관한_법률.pdf
 │       └── ...
+│   └── tax_law2 : 세법 관련(12개)
+│       ├── 국세기본법.pdf
+│   └── ...       
+│   └── tax_law6 : 세법 관련
+│       └── ...
+│
 │   └── tax_etc : 기타 데이터 (5개)
 │       ├── 2024_핵심_개정세법.pdf  
 │       ├── 연말정산_Q&A.pdf  
@@ -176,31 +181,32 @@ SKN06-4TH-04Team
 ### 2.4. split 방법
 - 세법 관련 (개별소비세법~증권거래세법_시행령).pdf
   ```python3
-  r"\s\n(제\d+조(?:의\d+)?(?:([^)]))?)(?=\s|$)"
-  chunk size로 split 하지 않고 조항별로 분리
+  chunk size = 1000, over lap = 100 으로 설정
   ```
 
 - 2024_핵심_개정세법.pdf, 연말정산_신고안내.pdf, 연말정산_주택자금·월세액_공제의이해.pdf, 주요_공제_항목별_계산사례.pdf
   ```python3
-  chunk size = 2000, over lap = 100 으로 설정
+  chunk size = 1000, over lap = 100 으로 설정
   ```
 
 - 연말정산_Q&A.pdf
   ```python3
-   chunk size = 1000, over lap = 150 으로 설정
+   chunk size = 1000, over lap = 100 으로 설정
   ```
 
 
 
 ### 2.5. 벡터 데이터베이스 구현 
-- 전처리된 데이터를 벡터화
+- ebedding vector의 차원수 초과로 72개의 파일을 6개의 폴더로 배분
+- 법령 및 시행령 전처리, 표가 많은 etc폴더 파일들 전처리
+- 각 폴더별 벡터화 후 빈 vector store에 저장.
 - 선택한 벡터 데이터베이스에 데이터 저장
   ```python3
   COLLECTION_NAME = "tax_law"
   PERSIST_DIRECTORY = "tax"
 
   def set_vector_store(documents):
-    embedding_model = OpenAIEmbeddings(model="text-embedding-3-large")
+    embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
 
     return Chroma.from_documents(
         documents=documents,
@@ -292,42 +298,130 @@ SKN06-4TH-04Team
   
 ---
 ## 📌 3. 성능 검증 및 평가
-- **검증 방법:** 사용자가 입력한 질문과 챗봇의 응답을 비교하고, 실제 법령에 명시된 내용을 확인하여 정확성, 관련성, 신뢰성 등 평가 지표 설정 및 측정
+- **검증 방법:** 
+- OPENAI를 이용한 실제 법령에 명시된 내용에서 Q-A쌍 10개 추출 후 LLM의 답변과 정확성, 관련성, 신뢰성 등 평가 지표 설정 및 측정
+- 홈텍스 내의 질의응답 게시판과 LLM모델의 답변 비교
+- cos 유사도를 통한 질문과 LLM답변간의 문백 유사도 검증
+- bleu스코어 및 rouge 스코어 검증
 - **결과:** 시스템이 제공하는 답변의 정확성과 일관성을 지속적으로 모니터링하여 시스템을 개선
 
 ```python
-# LangChain 모델 래핑
-langchain_model = LangchainLLMWrapper(model)
+# 평가용 chain  구성
+class EvalDatasetSchema(BaseModel):
+    user_input:str = Field(..., description="질문(Question)")
+    retrieved_contexts:list[str] = Field(..., description="LLM이 답변할 때 참조할 context")
+    reference: str = Field(..., description="정답(ground truth)")
 
-# 테스트 데이터 준비
-test_data_1 = {
-    "question": "주세법의 목적은 무엇인가요?",
-    "answer": chain.invoke("주세법의 목적은 무엇인가요?"),
-    "contexts": [doc.page_content for doc in retriever.get_relevant_documents("주세법의 목적은 무엇인가요?")],
-    "ground_truths": ["주세의 과세 요건 및 절차를 규정함으로써 주세를 공정하게 과세하고, 납세의무의 적정한 이행을확보하며, 재정수입의 원활한 조달에 이바지함을 목적으로 한다."],
-    "reference": "\n".join([doc.page_content for doc in retriever.get_relevant_documents("주세법의 목적은 무엇인가요?")])
-}
-```
-```python
-# Dataset 생성
-dataset = Dataset.from_list(test_data)
+jsonparser = JsonOutputParser(pydantic_object=EvalDatasetSchema)
 
-# 평가 실행
-result = evaluate(
-    dataset,
-    metrics=[
-        faithfulness,       # 신뢰성
-        answer_relevancy,   # 답변 적합성
-        context_precision,  # 문맥 정확성
-        context_recall      # 문맥 재현률
-    ],
-    llm=langchain_model
-  )
+qa_prompt_template = PromptTemplate.from_template(
+    template=dedent("""
+        당신은 RAG 평가를 위해 질문과 정답 쌍을 생성하는 인공지능 비서입니다.
+        다음 [Context] 에 문서가 주어지면 해당 문서를 기반으로 {num_questions}개의 질문을 생성하세요. 
+
+        질문과 정답을 생성한 후 아래의 출력 형식 GUIDE 에 맞게 생성합니다.
+        질문은 반드시 [context] 문서에 있는 정보를 바탕으로 생성해야 합니다. [context]에 없는 내용을 가지고 질문-답변을 절대 만들면 안됩니다.
+        질문은 간결하게 작성합니다.
+        하나의 질문에는 한 가지씩만 내용만 작성합니다. 
+        질문을 만들 때 "제공된 문맥에서", "문서에 설명된 대로", "주어진 문서에 따라" 또는 이와 유사한 말을 하지 마세요.
+        정답은 반드시 [context]에 있는 정보를 바탕으로 작성합니다. 없는 내용을 추가하지 않습니다.
+        질문과 답변을 만들고 그 내용이 [context] 에 있는 항목인지 다시 한번 확인합니다.
+        생성된 질문-답변 쌍은 반드시 dictionary 형태로 정의하고 list로 묶어서 반환해야 합니다.
+        질문-답변 쌍은 반드시 {num_questions}개를 만들어 주십시오.
+                    
+        출력 형식: {format_instructions}
+
+        [Context]
+        {context}
+        """
+    ),
+    partial_variables={"format_instructions":jsonparser.get_format_instructions()}
+)
+
+# 데이터셋 생성 체인 구성
+model = ChatOpenAI(model="gpt-4o")
+dataset_generator_chain = qa_prompt_template | model | jsonparser
+
+# 평가 데이터로 사용할 5개의 context 추출
+total_samples = 5
+
+idx_list = list(range(len(all_documents)))
+random.shuffle(idx_list)
+
+eval_context_list = []
+while len(eval_context_list) < total_samples:
+    idx = idx_list.pop()
+    context = all_documents[idx].page_content
+    if len(context) > 100:
+        eval_context_list.append(context)
+
+# 전체 context sample들로 qa dataset을 생성
+eval_data_list = []
+num_questions = 2
+for context in eval_context_list:
+    _eval_data_list = dataset_generator_chain.invoke(
+        {"context":context, "num_questions":num_questions}
+    )
+    for eval_data in _eval_data_list:
+        eval_data['retrieved_contexts'] = [context]
+    
+    eval_data_list.extend(_eval_data_list)
+
+eval_df = pd.DataFrame(eval_data_list)
+
+context_list = []
+response_list = []
+
+for user_input in eval_df['user_input']:
+    res = rag_chain.invoke(user_input)
+    context_list.append(res['source_context'])
+    response_list.append(res['llm_answer'])
+
+eval_df["retrieved_contexts"] = context_list
+eval_df["response"] = response_list
+
+eval_dataset = EvaluationDataset.from_pandas(eval_df)
+
+# 평가모델 wrapping
+load_dotenv()
+model = ChatOpenAI(model= "gpt-4o")
+eval_llm = LangchainLLMWrapper(model)
+embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
+eval_embedding = LangchainEmbeddingsWrapper(embedding_model)
+metrics = [
+    LLMContextRecall(llm=eval_llm),
+    LLMContextPrecisionWithReference(llm=eval_llm),
+    Faithfulness(llm=eval_llm),
+    AnswerRelevancy(llm=eval_llm, embeddings=eval_embedding)
+]
+
+# BLEU, ROUGE Score 검증
+scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL'])
+bleu_score = sentence_bleu([ground_truth.split()], answer.split())
+rouge_scores = scorer.score(answer, ground_truth)
+
+# 결과
+result = evaluate(dataset=eval_dataset, metrics=metrics)
+result.to_pandas()
+print(f"BLEU점수:{bleu_score:.2f}")
+print(f"Rouge1점수:{rouge_scores['rouge1']}")
+print(f"RougeL점수:{rouge_scores['rougeL']}")
+
+
 ```
 - 결과
-<img src="https://github.com/user-attachments/assets/aefc9c6e-19dc-438c-9ba0-144985bc72c4">
+Semantic Similarity: 0.38
+BLEU점수:0.00
+Rouge1점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575)
+RougeL점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575)
+
+##########################################################################################################
+- 결과
+```
+#<img src="https://github.com/user-attachments/assets/aefc9c6e-19dc-438c-9ba0-144985bc72c4">
 
 ```python
+
 test_data_2 = {
   "question": "인적공제에서 공제금액을 알려주세요.",
   "answer": chain.invoke("인적공제에서 공제금액을 알려주세요."),

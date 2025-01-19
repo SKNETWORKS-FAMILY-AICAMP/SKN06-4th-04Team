@@ -3,8 +3,7 @@
 
 {% block content %}
   <div class="chat-container">
-    <div id="chat-box" class="chat-box">
-    </div>
+    <div id="chat-box" class="chat-box"></div>
     <div class="input-container">
       <input type="text" id="chat-input">
       <button id="send-button" class="btn btn-primary">전송</button>
@@ -30,13 +29,17 @@
       messageElement.classList.add("chat-message");
       if (isUser) messageElement.classList.add("user-message");
 
-      const messageInfo = document.createElement("div");
-      messageInfo.classList.add("chat-info");
+      if (time) {
+        const messageInfo = document.createElement("div");
+        messageInfo.classList.add("chat-info");
 
-      const timeElement = document.createElement("p");
-      timeElement.textContent = time;
-      messageInfo.appendChild(timeElement);
-      messageElement.appendChild(messageInfo);
+        const timeElement = document.createElement("p");
+      
+        timeElement.textContent = time;
+        messageInfo.appendChild(timeElement);
+
+        messageElement.appendChild(messageInfo);
+      }
 
       const messageBubble = document.createElement("div");
       messageBubble.classList.add("chat-bubble");
@@ -45,25 +48,41 @@
 
       return messageElement;
     }
-  
+    function preventQuestion() {
+      userInput.disabled = true;
+      const buttons = document.querySelectorAll("div.chat-chip > button");
+      buttons.forEach(button => {
+          button.disabled = true;
+      });
+    }
+    function allowQuestion() {
+      userInput.disabled = false;
+      const buttons = document.querySelectorAll("div.chat-chip > button");
+      buttons.forEach(button => {
+        button.disabled = false;
+      });
+        userInput.focus();
+    }
 
-  
     async function askQuestion(query) {
+      
       let question = ''
-
+      
       if (query) question = query;
       else question = userInput.value.trim();
       
       if (!question) return;
-  
+      preventQuestion();
+
       const time = getCurrentTime();
       const userMessage = createMessageElement(time, question, true);
-
+      
       chatBox.appendChild(userMessage);
-  
+
+      scrollToBottomChat();
       userInput.value = "";
-      userInput.disabled = true;
-  
+
+      // userInput.disabled = true;
       try {
           const response = await fetch("/chat/get-answer", {
               method: "POST",
@@ -75,21 +94,48 @@
   
           const data = await response.json();
 
-          const respondTime = getCurrentTime();
-          const botMessage = createMessageElement(respondTime, data.answer);
+          // const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(null, data.answer);
           chatBox.appendChild(botMessage);
       } catch (error) {
-          const respondTime = getCurrentTime();
-          const botMessage = createMessageElement(respondTime, "알 수 없는 오류가 발생했습니다.");
+          // const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(null, "알 수 없는 오류가 발생했습니다.");
           chatBox.appendChild(botMessage);
       }
   
-      userInput.focus();
-      userInput.disabled = false;
-      chatBox.scrollTop = chatBox.scrollHeight;
+      // userInput.disabled = false;
+      // userInput.focus();
+      allowQuestion();
     }
 
-    // eventListener 추가 : submit - 1. '전송' 버튼 click 2. chat-input에 focus 잡혀 있을떼 enter 입력
+    function scrollToBottomChat() {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    function askKeywordChips(type) {
+      let chatText = `네, '${type}'에 대해서 안내해드리겠습니다! 어떤 점이 궁금하신가요? `
+      const botMessage = createMessageElement(null, chatText);
+
+      chatBox.appendChild(botMessage);
+      scrollToBottomChat();
+
+      userInput.focus();
+    }
+
+
+//    function toggleQuestionAllowance() {
+//      userInput.disabled = !userInput.disabled;
+//      const buttons = document.querySelectorAll("div.chat-chip > button");
+//      buttons.forEach(button => {
+//          button.disabled = !button.disabled;
+//      });
+//    }
+
+    /* 
+      EventListener - submit
+      1. '전송' 버튼 click시
+      2. 'input#chat-input' 에 focus 잡힌 상태로로 enter 입력
+    */
     sendButton.addEventListener("click", async () =>await askQuestion());
     userInput.addEventListener('keydown', async (e)=> {
       if (e.key === "Enter" && !e.shiftKey) await askQuestion()
@@ -110,6 +156,7 @@
       height: calc(100vh - 120px);
       padding-top: 10px;
       min-height: 100px;
+      border-bottom: 1px solid var(--border-gray-01);
     }
     .input-container {
       display: flex;
@@ -151,7 +198,11 @@
     }
 
     .chat-message {
-      margin: 0.5rem 1rem 0 1rem;
+      margin: 1.5rem 1rem .5rem 1rem;
+    }
+
+    .chat-message.user-message {
+      margin-top: 0.5rem;
     }
 
     .chat-message .chat-info{

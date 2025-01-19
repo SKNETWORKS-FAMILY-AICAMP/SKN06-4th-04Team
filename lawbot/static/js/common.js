@@ -27,6 +27,9 @@ function introduceChatbot() {
     chips.forEach(chip => {
         const button = document.createElement("button");
         button.textContent = chip;
+        button.onclick = function() {
+            askKeywordChips(chip);
+        };
         chatChip.appendChild(button);
     });
 

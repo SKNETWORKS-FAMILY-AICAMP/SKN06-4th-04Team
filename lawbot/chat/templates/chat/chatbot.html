@@ -18,35 +18,37 @@
     const userInput = document.getElementById("chat-input");
     const chatBox = document.getElementById("chat-box");
 
+    function getCurrentTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+
     function createMessageElement(time, message, isUser = false) {
       const messageElement = document.createElement("div");
       messageElement.classList.add("chat-message");
       if (isUser) messageElement.classList.add("user-message");
-  
+
       const messageInfo = document.createElement("div");
       messageInfo.classList.add("chat-info");
-  
+
       const timeElement = document.createElement("p");
       timeElement.textContent = time;
       messageInfo.appendChild(timeElement);
       messageElement.appendChild(messageInfo);
-  
+
       const messageBubble = document.createElement("div");
       messageBubble.classList.add("chat-bubble");
       messageBubble.textContent = message;
       messageElement.appendChild(messageBubble);
 
       return messageElement;
-  }
+    }
   
-  function getCurrentTime() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${hours}:${minutes}`;
-  }
+
   
-  async function askQuestion(query) {
+    async function askQuestion(query) {
       let question = ''
 
       if (query) question = query;
@@ -85,7 +87,7 @@
       userInput.focus();
       userInput.disabled = false;
       chatBox.scrollTop = chatBox.scrollHeight;
-  }
+    }
 
     // eventListener 추가 : submit - 1. '전송' 버튼 click 2. chat-input에 focus 잡혀 있을떼 enter 입력
     sendButton.addEventListener("click", async () =>await askQuestion());

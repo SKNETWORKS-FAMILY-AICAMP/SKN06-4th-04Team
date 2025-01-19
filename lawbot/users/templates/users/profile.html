@@ -3,77 +3,6 @@
 {% load static %}
 {% block title %}Lawbot - 내 프로필{% endblock %}
 
-{% block style %}
-  <style>
-    #profile {
-      margin-top: 28px;
-    }
-
-    .form-button.flex {
-      flex-direction: row !important;
-    }
-
-    .flex button.btn, .form-button a.btn {
-      width: 50%;
-    }
-
-    input:disabled,
-    select:disabled {
-      background: #f5f5f5;
-      color: #999 !important;
-    }
-
-    #btn-edit-on {
-      display: none;
-      text-align: center;
-    }
-
-    .no-edit #btn-edit-on {
-      display: initial !important;
-    }
-
-    .no-edit #btn-edit-off,
-    .no-edit #btn-submit {
-      display: none !important;
-    }
-
-    .profile-picture {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto;  
-      display: block;  
-    }
-
-    .profile-picture-container {
-      text-align: center;
-      width: 90%;  
-      margin-bottom: 20px;  
-    }
-
-    input[type="file"] {
-    width: 100%;  
-    box-sizing: border-box; 
-    padding: 8px;  
-}
-.btn-reset {
-    padding: 5px 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    display: block;
-    margin: 10px auto;
-}
-
-.btn-reset:hover {
-    background-color: #e9ecef;
-}
-  </style>
-{% endblock style %}
-
 {% block content %}
   <div id="profile">
     <h2 class="text-center font-primary">내 프로필</h2>
@@ -148,7 +77,7 @@
         hiddenInput.value = 'true';
         this.appendChild(hiddenInput);
     }
-});
+    });
     fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -162,3 +91,74 @@
 
   </script>
 {% endblock %}
+
+{% block style %}
+  <style>
+    #profile {
+      margin-top: 28px;
+    }
+
+    .form-button.flex {
+      flex-direction: row !important;
+    }
+
+    .flex button.btn, .form-button a.btn {
+      width: 50%;
+    }
+
+    input:disabled,
+    select:disabled {
+      background: #f5f5f5;
+      color: #999 !important;
+    }
+
+    #btn-edit-on {
+      display: none;
+      text-align: center;
+    }
+
+    .no-edit #btn-edit-on {
+      display: initial !important;
+    }
+
+    .no-edit #btn-edit-off,
+    .no-edit #btn-submit {
+      display: none !important;
+    }
+
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto;  
+      display: block;  
+    }
+
+    .profile-picture-container {
+      text-align: center;
+      width: 90%;  
+      margin-bottom: 20px;  
+    }
+
+    input[type="file"] {
+    width: 100%;  
+    box-sizing: border-box; 
+    padding: 8px;  
+    }
+    .btn-reset {
+        padding: 5px 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        display: block;
+        margin: 10px auto;
+    }
+
+    .btn-reset:hover {
+        background-color: #e9ecef;
+    }
+  </style>
+{% endblock style %}

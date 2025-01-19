@@ -1,6 +1,22 @@
 <!-- templates/home.html -->
 {% extends "layout.html" %}
 
+{% block content %}
+  <div id="login">
+    <h2 class="text-center font-primary">로그인</h2>
+    <div class="form_wrap">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button class="btn btn-primary" type="submit">로그인</button>
+      </form>
+      <p>계정이 없으신가요?
+        <a href="{% url 'register' %}" class="font-primary fw-500">회원가입</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
 {% block style %}
   <style>
     #login {
@@ -17,19 +33,3 @@
     }
   </style>
 {% endblock style %}
-
-{% block content %}
-  <div id="login">
-    <h2 class="text-center font-primary">로그인</h2>
-    <div class="form_wrap">
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_div }}
-        <button class="btn btn-primary" type="submit">로그인</button>
-      </form>
-      <p>계정이 없으신가요?
-        <a href="{% url 'register' %}" class="font-primary fw-500">회원가입</a>
-      </p>
-    </div>
-  </div>
-{% endblock %}

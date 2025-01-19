@@ -1,14 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Lawbot - 회원가입{% endblock %}
 
-{% block style %}
-  <style>
-    #register {
-      margin-top: 8vh;
-    }
-  </style>
-{% endblock style %}
-
 {% block content %}
 <div id="register">
       <h2 class="text-center font-primary">회원가입</h2>
@@ -25,3 +17,11 @@
     <a href="{% url 'home' %}" class="font-primary fw-500">로그인</a>
   </p>
 {% endblock %}
+
+{% block style %}
+  <style>
+    #register {
+      margin-top: 8vh;
+    }
+  </style>
+{% endblock style %}

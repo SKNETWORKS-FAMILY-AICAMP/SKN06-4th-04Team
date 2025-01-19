@@ -2,16 +2,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .llm import Chatting, delete_session_history, store, SESSION_ID, get_session_history
+from .llm import Chatting, delete_session_history, SESSION_ID, get_session_history
 import json
-
 
 chain=Chatting()
 
 @csrf_exempt
-def chatbot_view(request):
-    # history = get_session_history(SESSION_ID)
-    
+def chatbot_view(request):    
     return render(request, 'chat/chatbot.html',)
 
 @csrf_exempt

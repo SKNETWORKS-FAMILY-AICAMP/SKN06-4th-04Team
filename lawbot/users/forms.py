@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from datetime import datetime
 from django.core.exceptions import ValidationError
 
-
 # 오류 메시지를 한 곳에 모음
 ERROR_MESSAGES = {
     "invalid_login": "⚠️ 아이디 또는 비밀번호가 올바르지 않습니다.",
@@ -17,7 +16,6 @@ ERROR_MESSAGES = {
     "password_confirmation_required": "⚠️ 비밀번호 확인을 입력해주세요.",
     "username_exists": "⚠️ 이미 사용 중인 아이디입니다.",
 }
-
 
 class BaseUserForm(forms.ModelForm):
     current_year = datetime.now().year
@@ -146,10 +144,8 @@ class ProfileUpdateForm(BaseUserForm, UserChangeForm):
         if new_password:
             user.set_password(new_password)
 
-        # 프로필 사진이 None이면 기본 이미지로 설정
         if self.cleaned_data.get('profile_picture') is None:
             user.profile_picture = None
-
 
         if commit:
             user.save()

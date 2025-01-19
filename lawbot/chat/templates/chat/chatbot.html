@@ -6,21 +6,21 @@
     .chat-container {
       width: 100%;
       background: var(--background-light-blue);
-      height: calc(100vh - 110px);
+      height: calc(100vh - 120px);
       padding-top: 10px;
       min-height: 100px;
     }
     .input-container {
       display: flex;
       column-gap: 0.5rem;
-      margin:6px 8px;
+      margin:8px 8px;
     }
 
     .input-container input {
       flex: 1;
       border: 1px solid #ccc;
       border-radius: 4px;
-      line-height: 30px;
+      line-height: 40px;
       padding: 0 1rem;
     }
 
@@ -73,18 +73,19 @@
       position: absolute;
       width: 40px;
       height: 40px;
-      content: url('/static/img/icon-profile-red.svg');
+      content: url('/static/img/icon-profile-bot.svg');
       display: block;
       left: -50px;
       top: -10px;
     }
     .chat-message .chat-bubble {
-      padding: .9375rem 1.5rem;
+      padding: .625rem 1.25rem;
       display: inline-block;
       border-radius: 0 20px 20px;
       background: #fff;
       line-height: 20px;
       max-width: 90%;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     }
 
     .chat-message.user-message .chat-info {
@@ -104,23 +105,68 @@
     .chat-message.user-message .chat-bubble {
       border-radius: 20px 0 20px 20px;
       float: right;
-      background: #555C64;
+      background: #737d88;
       color: #fff;
-    }
+      }
 
     .chat-message.user-message .chat-info p:before {
       right: -50px;
       left: initial;
       content: url('/static/img/icon-profile.svg');
     }
+    
+    #send-button {
+      font-size: 15px;
+    }
+    
+    .chat-chip {
+      display: flex;
+      column-gap: .5rem;
+      margin-top: 10px;
+    }
+    .chat-chip button {
+      background: #5ccace;
+      color: #ffffff;
+      border-radius: 20px;
+      border: none;
+      line-height: 1.875rem;
+      padding: 0 1.25rem;
+      font-size: 13px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+      cursor: pointer;
+    }
+    
+    .intro-chat.chat-message .chat-info {
+      height: 50px;
+      margin: .5rem 0 .75rem;
+    }
+
+    .img-bot{
+      width:80px;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
   <div class="chat-container">
-    <div id="chat-box" class="chat-box"></div>
+    <div id="chat-box" class="chat-box">
+      <div class="intro-chat chat-message">
+        <div class="chat-info">
+          <img class="img-bot" src="{% static '/img/icon-bot.svg' %}">
+        </div>
+        <div class="chat-bubble">안녕하세요!<b> 세법 챗봇</b> 'Lawbot' 입니다!<br/>무엇을 도와드릴까요?</div>
+        <div class="chat-chip">
+          <button class="chip-1" class="askKeyword('연말정산')">연말정산</button>
+          <button class="chip-1" class="askKeyword('부가가치세')">부가가치세</button>
+          <button class="chip-1" class="askKeyword('근로소득세')">근로소득세</button>
+          <button class="chip-1" class="askKeyword('사업소득세')">사업소득세</button>
+          <button class="chip-1" class="askKeyword('법인세')">법인세</button>
+        </div>
+      </div>
+
+    </div>
     <div class="input-container">
-      <input type="text" id="user-input">
+      <input type="text" id="chat-input">
       <button id="send-button" class="btn btn-primary">전송</button>
     </div>
   </div>
@@ -129,112 +175,86 @@
 {% block script %}
   <script>
     const sendButton = document.getElementById("send-button");
-    const userInput = document.getElementById("user-input");
+    const userInput = document.getElementById("chat-input");
     const chatBox = document.getElementById("chat-box");
 
-    async function askQuestion() {
-      const question = userInput.value.trim();
-      if (!question) 
-        return;
-      
+    function createMessageElement(time, message, isUser = false) {
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("chat-message");
+      if (isUser) messageElement.classList.add("user-message");
+  
+      const messageInfo = document.createElement("div");
+      messageInfo.classList.add("chat-info");
+  
+      const timeElement = document.createElement("p");
+      timeElement.textContent = time;
+      messageInfo.appendChild(timeElement);
+      messageElement.appendChild(messageInfo);
+  
+      const messageBubble = document.createElement("div");
+      messageBubble.classList.add("chat-bubble");
+      messageBubble.textContent = message;
+      messageElement.appendChild(messageBubble);
+
+      return messageElement;
+  }
+  
+  function getCurrentTime() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
-      const time = `${hours}:${minutes}`;
+      return `${hours}:${minutes}`;
+  }
+  
+  async function askQuestion(query) {
+      let question = ''
 
-      const userMessage = document.createElement("div");
-      userMessage.classList.add("chat-message", "user-message");
-
-      const userInfo = document.createElement("div");
-      userInfo.classList.add("chat-info");
-      const chatTime = document.createElement("p")
-      chatTime.textContent = time;
-      userInfo.appendChild(chatTime);
-      userMessage.appendChild(userInfo);
-
-      const userBubble = document.createElement("div");
-      userBubble.classList.add("chat-bubble");
-      userBubble.textContent = question;
-      userMessage.appendChild(userBubble);
+      if (query) question = query;
+      else question = userInput.value.trim();
+      
+      if (!question) return;
+  
+      const time = getCurrentTime();
+      const userMessage = createMessageElement(time, question, true);
 
       chatBox.appendChild(userMessage);
+  
       userInput.value = "";
       userInput.disabled = true;
-      
-
+  
       try {
-        const response = await fetch("/chat/get-answer", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({question})
-        });
-        
-        const data = await response.json();
+          const response = await fetch("/chat/get-answer", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ question })
+          });
+  
+          const data = await response.json();
 
-        const respondNow = new Date();
-        const hours = String(respondNow.getHours()).padStart(2, '0');
-        const minutes = String(respondNow.getMinutes()).padStart(2, '0');
-        const respondTime = `${hours}:${minutes}`;
-
-        const botMessage = document.createElement("div");
-        botMessage.classList.add("chat-message");
-
-        const chatInfo = document.createElement("div");
-        chatInfo.classList.add("chat-info");
-        
-        const botTime = document.createElement("p")
-        botTime.textContent = respondTime;
-        chatInfo.appendChild(botTime);
-        botMessage.appendChild(chatInfo);
-
-        const botBubble = document.createElement("div");
-        botBubble.classList.add("chat-bubble");
-        botBubble.textContent = data.answer || "오류: " + (
-          data.error || "알 수 없는 오류가 발생했습니다.");
-        botMessage.appendChild(botBubble);
-
-        chatBox.appendChild(botMessage);
-        
+          const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(respondTime, data.answer);
+          chatBox.appendChild(botMessage);
       } catch (error) {
-        const respondNow = new Date();
-        const hours = String(respondNow.getHours()).padStart(2, '0');
-        const minutes = String(respondNow.getMinutes()).padStart(2, '0');
-        const respondTime = `${hours}:${minutes}`;
-
-        const botMessage = document.createElement("div");
-        botMessage.classList.add("chat-message");
-
-        const chatInfo = document.createElement("div");
-        chatInfo.classList.add("chat-info");
-        
-        const botTime = document.createElement("p")
-        botTime.textContent = respondTime;
-        chatInfo.appendChild(botTime);
-        botMessage.appendChild(chatInfo);
-
-        const botBubble = document.createElement("div");
-        botBubble.classList.add("chat-bubble");
-        botBubble.textContent = "알 수 없는 오류가 발생했습니다."
-        botMessage.appendChild(botBubble);
-
-        chatBox.appendChild(botMessage);
-        
+          const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(respondTime, "알 수 없는 오류가 발생했습니다.");
+          chatBox.appendChild(botMessage);
       }
-
+  
+      userInput.focus();
       userInput.disabled = false;
       chatBox.scrollTop = chatBox.scrollHeight;
-    }
+  }
 
-    sendButton.addEventListener("click", async () => {
-      await askQuestion()
-    });
-
+    // '전송' 버튼 click || chat-input에 focus 잡혀 있을떼 enter 입력 : submit 
+    sendButton.addEventListener("click", async () =>await askQuestion());
     userInput.addEventListener('keydown', async (e)=> {
-      if (e.key === "Enter" && !e.shiftKey) {
-        await askQuestion()
-      };
+      if (e.key === "Enter" && !e.shiftKey) await askQuestion()
     }, true);
+    
+    document.addEventListener('DOMContentLoaded', ()=> {
+      userInput.focus();
+    })
   </script>
 {% endblock %}

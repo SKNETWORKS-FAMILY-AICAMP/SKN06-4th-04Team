@@ -48,8 +48,18 @@
   </body>
 
   <script>
-    function newChat() {
-      console.log("새로운 대화 시작 fnc 실행")
+    async function newChat() {
+      try {
+        const response = await fetch("/chat/new-chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        });
+        console.log(response)
+      } catch(e) {
+        console.log(e)
+      }
     }
   </script>
 

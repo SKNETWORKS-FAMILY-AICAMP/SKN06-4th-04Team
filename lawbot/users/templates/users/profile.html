@@ -1,5 +1,6 @@
 <!-- users/templates/users/profile.html -->
 {% extends "layout.html" %}
+{% load static %}
 {% block title %}Lawbot - 내 프로필{% endblock %}
 
 {% block style %}
@@ -35,26 +36,76 @@
     .no-edit #btn-submit {
       display: none !important;
     }
+
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto;  
+      display: block;  
+    }
+
+    .profile-picture-container {
+      text-align: center;
+      width: 90%;  
+      margin-bottom: 20px;  
+    }
+
+    input[type="file"] {
+    width: 100%;  
+    box-sizing: border-box; 
+    padding: 8px;  
+}
+.btn-reset {
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin: 10px auto;
+}
+
+.btn-reset:hover {
+    background-color: #e9ecef;
+}
   </style>
 {% endblock style %}
 
 {% block content %}
   <div id="profile">
     <h2 class="text-center font-primary">내 프로필</h2>
+
     <div class="form_wrap">
-      <form id="register-form" method="post" data-edit-mode="{{ edit_mode }}">
+      <form id="register-form" method="post" enctype="multipart/form-data" data-edit-mode="{{ edit_mode }}">
         {% csrf_token %}
+        
+        <div class="profile-picture-container">
+          {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="프로필 사진" class="profile-picture" id="profileImage">
+          {% else %}
+            <img src="{% static 'img/default_profile.jpg' %}" alt="기본 프로필 사진" class="profile-picture" id="profileImage">
+          {% endif %}
+          <button type="button" class="btn-reset" id="removePhoto" style="margin-top: 10px;">기본 이미지로 변경</button>
+        </div>
+
+
         {{ form.as_div }}
+
         <a id="btn-edit-on" type="button" class="btn btn-primary" href="/profile/update">정보 수정</a>
         <div class="form-button flex">
           <button id="btn-submit" type="submit" class="btn btn-primary">수정</button>
-          <a id="btn-edit-off" type="button" class="btn btn-outlined-primary"href="/profile" >취소</a>
+          <a id="btn-edit-off" type="button" class="btn btn-outlined-primary" href="/profile">취소</a>
         </div>
-
       </form>
     </div>
   </div>
 {% endblock %}
+
+
+
 
 {% block script %}
   <script>
@@ -62,23 +113,52 @@
     const inputsAndSelects = registerForm.querySelectorAll("input, select");
     let editMode = null;
 
-    inital_values = []
-    for (let [index, val] of inputsAndSelects.entries()) {
-        inital_values.push(val.value)
-    }
     function toggleEditMode() {
       inputsAndSelects.forEach((element) => element.disabled = !element.disabled);
       editMode = !editMode
       registerForm.classList.toggle("no-edit")
     }
 
-    function cancel_edit(e) {
-
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
       const editMode = document.getElementById("register-form").getAttribute("data-edit-mode") === "True"
       if (!editMode) toggleEditMode()
     })
+
+
+    // 파일 입력 필드 처리를 위한 추가 스크립트
+    const fileInput = document.querySelector('input[type="file"]');
+    const profileImage = document.getElementById('profileImage');
+    const removePhotoBtn = document.getElementById('removePhoto');
+    const defaultImageUrl = "{% static 'img/default_profile.jpg' %}";
+    let isDefaultImage = false;
+
+    removePhotoBtn.addEventListener('click', function() {
+        
+        fileInput.value = '';
+        
+        profileImage.src = defaultImageUrl;
+        isDefaultImage = true;
+    });
+    registerForm.addEventListener('submit', function(e) {
+    if (isDefaultImage) {
+        
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'use_default_image';
+        hiddenInput.value = 'true';
+        this.appendChild(hiddenInput);
+    }
+});
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profileImage.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
   </script>
 {% endblock %}

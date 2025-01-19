@@ -20,3 +20,9 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/', 
+        null=True, 
+        blank=True, 
+        verbose_name="프로필 사진"
+    )

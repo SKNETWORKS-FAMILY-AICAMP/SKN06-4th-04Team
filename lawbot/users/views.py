@@ -45,7 +45,7 @@ def profile(request):
 def profile_update(request):
     user = request.user
     if request.method == "POST":
-        form = ProfileUpdateForm(request.POST, instance=user)
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             user = form.save(commit=False)
 
@@ -55,10 +55,18 @@ def profile_update(request):
                 update_session_auth_hash(request, user)
                 messages.success(request, "비밀번호가 성공적으로 변경되었습니다.")
 
+            # 프로필 사진 처리
+            if 'profile_picture' in request.FILES:
+                user.profile_picture = request.FILES['profile_picture']
+            # 기본 이미지로 변경 (hidden input으로 전달된 값 확인)
+            if request.POST.get('use_default_image') == 'true':
+                user.profile_picture = None
+
             user.save()
             messages.success(request, "프로필이 성공적으로 업데이트되었습니다!")
             return redirect("profile")
     else:
         form = ProfileUpdateForm(instance=user)
 
-    return render(request, "users/profile.html", {"form": form,"edit_mode": True})
+    return render(request, "users/profile.html", {"form": form, "edit_mode": True})
+

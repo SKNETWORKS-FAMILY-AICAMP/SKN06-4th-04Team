@@ -1,6 +1,105 @@
 {% extends "layout.html" %}
 {% load static %}
 
+{% block content %}
+  <div class="chat-container">
+    <div id="chat-box" class="chat-box">
+    </div>
+    <div class="input-container">
+      <input type="text" id="chat-input">
+      <button id="send-button" class="btn btn-primary">전송</button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    const sendButton = document.getElementById("send-button");
+    const userInput = document.getElementById("chat-input");
+    const chatBox = document.getElementById("chat-box");
+
+    function createMessageElement(time, message, isUser = false) {
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("chat-message");
+      if (isUser) messageElement.classList.add("user-message");
+  
+      const messageInfo = document.createElement("div");
+      messageInfo.classList.add("chat-info");
+  
+      const timeElement = document.createElement("p");
+      timeElement.textContent = time;
+      messageInfo.appendChild(timeElement);
+      messageElement.appendChild(messageInfo);
+  
+      const messageBubble = document.createElement("div");
+      messageBubble.classList.add("chat-bubble");
+      messageBubble.textContent = message;
+      messageElement.appendChild(messageBubble);
+
+      return messageElement;
+  }
+  
+  function getCurrentTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+  }
+  
+  async function askQuestion(query) {
+      let question = ''
+
+      if (query) question = query;
+      else question = userInput.value.trim();
+      
+      if (!question) return;
+  
+      const time = getCurrentTime();
+      const userMessage = createMessageElement(time, question, true);
+
+      chatBox.appendChild(userMessage);
+  
+      userInput.value = "";
+      userInput.disabled = true;
+  
+      try {
+          const response = await fetch("/chat/get-answer", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ question })
+          });
+  
+          const data = await response.json();
+
+          const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(respondTime, data.answer);
+          chatBox.appendChild(botMessage);
+      } catch (error) {
+          const respondTime = getCurrentTime();
+          const botMessage = createMessageElement(respondTime, "알 수 없는 오류가 발생했습니다.");
+          chatBox.appendChild(botMessage);
+      }
+  
+      userInput.focus();
+      userInput.disabled = false;
+      chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+    // eventListener 추가 : submit - 1. '전송' 버튼 click 2. chat-input에 focus 잡혀 있을떼 enter 입력
+    sendButton.addEventListener("click", async () =>await askQuestion());
+    userInput.addEventListener('keydown', async (e)=> {
+      if (e.key === "Enter" && !e.shiftKey) await askQuestion()
+    }, true);
+    
+    document.addEventListener('DOMContentLoaded', ()=> {
+      setTimeout(introduceChatbot, 500);
+      userInput.focus();
+    })
+  </script>
+{% endblock %}
+
 {% block style %}
   <style>
     .chat-container {
@@ -147,103 +246,4 @@
       width:80px;
     }
   </style>
-{% endblock %}
-
-{% block content %}
-  <div class="chat-container">
-    <div id="chat-box" class="chat-box">
-    </div>
-    <div class="input-container">
-      <input type="text" id="chat-input">
-      <button id="send-button" class="btn btn-primary">전송</button>
-    </div>
-  </div>
-{% endblock %}
-
-{% block script %}
-  <script>
-    const sendButton = document.getElementById("send-button");
-    const userInput = document.getElementById("chat-input");
-    const chatBox = document.getElementById("chat-box");
-
-    function createMessageElement(time, message, isUser = false) {
-      const messageElement = document.createElement("div");
-      messageElement.classList.add("chat-message");
-      if (isUser) messageElement.classList.add("user-message");
-  
-      const messageInfo = document.createElement("div");
-      messageInfo.classList.add("chat-info");
-  
-      const timeElement = document.createElement("p");
-      timeElement.textContent = time;
-      messageInfo.appendChild(timeElement);
-      messageElement.appendChild(messageInfo);
-  
-      const messageBubble = document.createElement("div");
-      messageBubble.classList.add("chat-bubble");
-      messageBubble.textContent = message;
-      messageElement.appendChild(messageBubble);
-
-      return messageElement;
-  }
-  
-  function getCurrentTime() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${hours}:${minutes}`;
-  }
-  
-  async function askQuestion(query) {
-      let question = ''
-
-      if (query) question = query;
-      else question = userInput.value.trim();
-      
-      if (!question) return;
-  
-      const time = getCurrentTime();
-      const userMessage = createMessageElement(time, question, true);
-
-      chatBox.appendChild(userMessage);
-  
-      userInput.value = "";
-      userInput.disabled = true;
-  
-      try {
-          const response = await fetch("/chat/get-answer", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ question })
-          });
-  
-          const data = await response.json();
-
-          const respondTime = getCurrentTime();
-          const botMessage = createMessageElement(respondTime, data.answer);
-          chatBox.appendChild(botMessage);
-      } catch (error) {
-          const respondTime = getCurrentTime();
-          const botMessage = createMessageElement(respondTime, "알 수 없는 오류가 발생했습니다.");
-          chatBox.appendChild(botMessage);
-      }
-  
-      userInput.focus();
-      userInput.disabled = false;
-      chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-    // eventListener 추가 : submit - 1. '전송' 버튼 click 2. chat-input에 focus 잡혀 있을떼 enter 입력
-    sendButton.addEventListener("click", async () =>await askQuestion());
-    userInput.addEventListener('keydown', async (e)=> {
-      if (e.key === "Enter" && !e.shiftKey) await askQuestion()
-    }, true);
-    
-    document.addEventListener('DOMContentLoaded', ()=> {
-      setTimeout(introduceChatbot, 500);
-      userInput.focus();
-    })
-  </script>
 {% endblock %}

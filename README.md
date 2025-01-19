@@ -411,7 +411,6 @@ print(f"RougeL점수:{rouge_scores['rougeL']}")
 ```
 - 결과<br/>
 <img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/q_a_10pair.png"> <br/>
-![image](https://github.com/user-attachments/assets/d0b3ddcc-91fd-4356-9b12-9765784fb446)
 
 - 결과<br/>
 <img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/hometax.png"><br/>

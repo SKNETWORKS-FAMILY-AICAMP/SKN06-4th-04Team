@@ -29,9 +29,10 @@ class BaseUserForm(forms.ModelForm):
     )
     phone_number = forms.CharField(label="휴대폰번호", max_length=11, required=True)
 
+
     class Meta:
         model = get_user_model()
-        fields = ("email", "name", "birthdate", "phone_number")
+        fields = ("email", "name", "birthdate", "phone_number", "profile_picture")
         widgets = {
             "birthdate": forms.DateInput(attrs={"type": "date"}),
             "phone_number": forms.TextInput(attrs={"placeholder": "01011112222"}),
@@ -42,6 +43,7 @@ class BaseUserForm(forms.ModelForm):
             "birthdate": "생년월일을 선택해주세요.",
             "phone_number": "휴대폰번호를 입력해주세요. (예: 01011112222)",
         }
+
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -114,7 +116,15 @@ class ProfileUpdateForm(BaseUserForm, UserChangeForm):
         required=False,
         help_text="새 비밀번호 확인을 입력해주세요.",
     )
+    profile_picture = forms.ImageField(
+        label="프로필 사진",
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+    class Meta(BaseUserForm.Meta):
+        fields = ("profile_picture",) + BaseUserForm.Meta.fields
 
+        
     def clean(self):
         cleaned_data = super().clean()
         new_password = cleaned_data.get("new_password")
@@ -136,6 +146,12 @@ class ProfileUpdateForm(BaseUserForm, UserChangeForm):
         if new_password:
             user.set_password(new_password)
 
+        # 프로필 사진이 None이면 기본 이미지로 설정
+        if self.cleaned_data.get('profile_picture') is None:
+            user.profile_picture = None
+
+
         if commit:
             user.save()
         return user
+

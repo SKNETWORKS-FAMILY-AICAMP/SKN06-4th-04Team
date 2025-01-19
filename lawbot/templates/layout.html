@@ -21,7 +21,7 @@
       <nav>
         {% if '/profile/' in request.path %}
           <a class="btn btn-text" href="/">
-            <img class="flex" src="{% static '/img/icon-home.svg' %}">
+            <img class="flex" src="{% static '/img/icon_home.svg' %}">
           </a>
         {% else %}
           <button class="btn btn-text" type="button" onclick="newChat()">+ 새로운 대화 시작하기</button>
@@ -32,7 +32,7 @@
           <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button class="btn btn-text" type="submit">
-              <img class="nav_logout" src="{% static '/img/icon-logout.svg' %}">
+              <img class="nav_logout" src="{% static '/img/icon_logout.svg' %}">
 
             </button>
           </form>

@@ -13,7 +13,7 @@ function introduceChatbot() {
 
     const img = document.createElement("img");
     img.classList.add("img-bot");
-    img.src = "/static/img/icon-bot.svg";
+    img.src = "/static/img/icon_bot.svg";
     chatInfo.appendChild(img);
 
     const chatBubble = document.createElement("div");

@@ -422,64 +422,10 @@ print(f"RougeL점수:{rouge_scores['rougeL']}")
 2. 신용카드 공제: 신용카드 사용금액 소득공제는 근로소득이 있는 거주자가 해당 과세연도에 사용한 금액에 대해 적용됩니다.취업 전 사용한 금액은 소득이 없었기 때문에 공제 대상이 아닐 수 있습니다.
 각 개인의 상황에 따라 다를 수 있으므로, 정확한 판단을 위해서는 세무 전문가와 상담하거나 국세청의 지침을 확인하는 것이 좋습니다. 이 답변은 세법 관련 정보를 바탕으로 작성되었으며, 구체적인 상황에 따라 전문가의 추가 조언이 필요할 수 있습니다. <br/>
 - 결과<br/>
-Semantic Similarity: 0.38 <br/>
-BLEU점수:0.00 <br/>
+Semantic Similarity: 0.38 <br/><br/>
+BLEU점수:0.00 <br/><br/>
 Rouge1점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575) <br/>
 RougeL점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575) <br/>
-
-##########################################################################################################
-- 결과
-```
-#<img src="https://github.com/user-attachments/assets/aefc9c6e-19dc-438c-9ba0-144985bc72c4">
-
-```python
-
-test_data_2 = {
-  "question": "인적공제에서 공제금액을 알려주세요.",
-  "answer": chain.invoke("인적공제에서 공제금액을 알려주세요."),
-  "contexts": [doc.page_content for doc in retriever.get_relevant_documents("인적공제에서 공제금액을 알려주세요.")],
-  "ground_truths": ["기본공제대상자 1명당 150만원. 기본공제대상자가 다음에 해당되는 경우 기본공제 외에 추가로 공제, 경로우대자(70세 이상)인 경우 1명당 연 100만원, 장애인인 경우 1명당 연 200만원, 종합소득금액이 3천만원 이하인 거주자가 배우자가 없는 여성으로서 기본공제대상부양가족이 있는세대주이거나, 배우자가 있는 여성근로자인 경우 연 50만원, 배우자가 없는 근로자가 기본공제대상 직계비속 또는 입양자가 있는 경우 연 100만원(부녀자공제와 중복 배제：한부모 공제를 우선 적용)"],
-  "reference": "\n".join([doc.page_content for doc in retriever.get_relevant_documents("인적공제에서 공제금액을 알려주세요.")])
-}
-```
-- 결과<br/>
-<img src="https://github.com/user-attachments/assets/03540d97-2b6e-489a-b7c2-379949ba19cb">
-
-```python
-test_data_3 = {
-  "question": "교육세법 제1조가 무엇인가요?",
-  "answer": chain.invoke("교육세법 제1조가 무엇인가요?"),
-  "contexts": [doc.page_content for doc in retriever.get_relevant_documents("교육세법 제1조가 무엇인가요?")],
-  "ground_truths": ["목적은 교육의 질적 향상을 도모하기 위하여 필요한 교육재정의 확충에 드는 재원을 확보함을 목적이다."],
-  "reference": "\n".join([doc.page_content for doc in retriever.get_relevant_documents("교육세법 제1조가 무엇인가요?")])
-}
-```
-- 결과<br/>
-<img src="https://github.com/user-attachments/assets/74d078ff-d40c-4e82-a68d-801f864f1121">
-
-```python
-test_data_4 = {
-  "question": "개정세법 중 기업세금 감면제도의 개정 내용 요약해서 알려줘.",
-  "answer": chain.invoke("개정세법 중 기업세금 감면제도의 개정 주요요내용 요약해서 알려줘."),
-  "contexts": [doc.page_content for doc in retriever.get_relevant_documents("개정세법 중 기업세금 감면제도의 개정 내용 요약해서 알려줘.")],
-  "ground_truths": ["창업중소기업 세액감면 제도 합리화, 연구･인력개발비에 대한 세액공제 확대, R&D 출연금에 대한 과세특례 인정범위 확대, 기술혁신형 중소기업 주식취득에 대한 세액공제 합리화, 성과공유 중소기업 경영성과급에 대한 세액공제 등의 적용기한 연장 및 재설계, 통합투자세액공제 제도 합리화, 지방이전지원세제 제도 정비, 소기업･소상공인 공제부금에 대한 소득공제 한도 확대, 성실사업자 등에 대한 의료비 등 세액공제 사후관리 합리화"],
-  "reference": "\n".join([doc.page_content for doc in retriever.get_relevant_documents("개정세법 중 기업세금 감면제도의 개정 내용 요약해서 알려줘.")])
-}
-```
-- 결과<br/>
-<img src="https://github.com/user-attachments/assets/00f0d104-63a9-4ccb-be15-4acfd5703208">
-
-```python
-test_data_5 = {
-    "question": "부담부 증여로 주택 취득시 장기주택저당차입금 이자상환액 공제가 가능한가가?",
-    "answer": chain.invoke("부담부 증여로 주택 취득시 장기주택저당차입금 이자상환액 공제가 가능한가가?"),
-    "contexts": [doc.page_content for doc in retriever.get_relevant_documents("부담부 증여로 주택 취득시 장기주택저당차입금 이자상환액 공제가 가능한가가?")],
-    "ground_truths": ["증여등기일로부터 3개월 이내에 해당 주택에 저당권을 설정하고 상환기간이 15년 이상인 장기주택저당차입금을 대출받아 증여재산에 담보된 채무를 상환하는 경우 해당 채무액의 범위 내에서 이자상환액 소득공제가 가능합니다."],
-    "reference": "\n".join([doc.page_content for doc in retriever.get_relevant_documents("부담부 증여로 주택 취득시 장기주택저당차입금 이자상환액 공제가 가능한가가?")])
-}
-```
-- 결과<br/>
-<img src="https://github.com/user-attachments/assets/a12c1ba2-7b97-4088-8aa5-f016e57365dc">
 
 
 
@@ -488,6 +434,6 @@ test_data_5 = {
  - **노원재**: 어렵군요..
  - **박서윤**: 이제까지 한 프로젝트 중에서 제일 재밌는데 잘 모르겠다,,,
  - **박유나**: 이번 프로젝트를 진행하며, 전처리 과정에 따라 결과가 크게 달라지는 점, prompt template 메시지 작성 방식에 따라 결과가 극명하게 변화하는 점이 흥미로웠습니다. 
- - **유경상**: 이번 프로젝트에서 다양한 문서를 동시에 가져옴으로써 text 및 table표 읽는 방법과 정규표현식을통해 전처리하는 방법, prompt template 을 작성하고 구성하는 방법과 chain을 구성하는 방법을 배웠다. 
+ - **유경상**: 지난번 프로젝트때 부족했던 평가부분을 수정하면서 LLM모델 구성에대한 이해도가 높아졌다. 하지만 아직 장고활용에 있어서 부족한점이 많아 추가적으로 학습이 필요할거같다. 
  - **전하연**: 쉽지 않다..
 >>>>>>> 71306b5 (챗봇)

@@ -198,7 +198,7 @@
     }
 
     .chat-message {
-      margin: 1.5rem 1rem .5rem 1rem;
+      margin: .5rem 1rem .5rem 1rem;
     }
 
     .intro-chat.chat-message {
@@ -301,6 +301,16 @@
 
     .img-bot{
       width:80px;
+      animation:botmove 1.25s infinite linear;
+    }
+
+    @keyframes botmove{
+      0%,100%{
+          transform:translateY(-7%);
+      }
+      50%{
+          transform:translateY(3%);
+      }
     }
   </style>
 {% endblock %}

@@ -26,7 +26,6 @@ function introduceChatbot() {
     const chips = ["연말정산", "부가가치세", "근로소득세", "사업소득세", "법인세"];
     chips.forEach(chip => {
         const button = document.createElement("button");
-        button.classList.add("chip-1");
         button.textContent = chip;
         chatChip.appendChild(button);
     });

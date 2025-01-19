@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <script src="{% static 'js/common.js' %}"></script>
     <title>
       {% block title %}Lawbot - 세법 챗봇{% endblock title %}
     </title>
@@ -49,6 +50,8 @@
 
   <script>
     async function newChat() {
+      if (!confirm('새로운 대화를 시작하시겠습니까?')) return
+
       try {
         const response = await fetch("/chat/new-chat", {
           method: "POST",
@@ -56,7 +59,9 @@
             "Content-Type": "application/json"
           },
         });
-        console.log(response)
+
+        deleteChats()
+        setTimeout(introduceChatbot, 800);
       } catch(e) {
         console.log(e)
       }

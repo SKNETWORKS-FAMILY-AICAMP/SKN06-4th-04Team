@@ -30,7 +30,8 @@ def get_session_history(session_id):
     return store[session_id]
 
 def delete_session_history():
-    del store[SESSION_ID]
+    if store.get(SESSION_ID):
+        del store[SESSION_ID]
 
 
 class Chatting:

@@ -79,6 +79,7 @@
       top: -10px;
     }
     .chat-message .chat-bubble {
+      font-size: 13px;
       padding: .625rem 1.25rem;
       display: inline-block;
       border-radius: 0 20px 20px;
@@ -124,6 +125,7 @@
       column-gap: .5rem;
       margin-top: 10px;
     }
+    
     .chat-chip button {
       background: #5ccace;
       color: #ffffff;
@@ -150,20 +152,6 @@
 {% block content %}
   <div class="chat-container">
     <div id="chat-box" class="chat-box">
-      <div class="intro-chat chat-message">
-        <div class="chat-info">
-          <img class="img-bot" src="{% static '/img/icon-bot.svg' %}">
-        </div>
-        <div class="chat-bubble">안녕하세요!<b> 세법 챗봇</b> 'Lawbot' 입니다!<br/>무엇을 도와드릴까요?</div>
-        <div class="chat-chip">
-          <button class="chip-1" class="askKeyword('연말정산')">연말정산</button>
-          <button class="chip-1" class="askKeyword('부가가치세')">부가가치세</button>
-          <button class="chip-1" class="askKeyword('근로소득세')">근로소득세</button>
-          <button class="chip-1" class="askKeyword('사업소득세')">사업소득세</button>
-          <button class="chip-1" class="askKeyword('법인세')">법인세</button>
-        </div>
-      </div>
-
     </div>
     <div class="input-container">
       <input type="text" id="chat-input">
@@ -247,13 +235,14 @@
       chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-    // '전송' 버튼 click || chat-input에 focus 잡혀 있을떼 enter 입력 : submit 
+    // eventListener 추가 : submit - 1. '전송' 버튼 click 2. chat-input에 focus 잡혀 있을떼 enter 입력
     sendButton.addEventListener("click", async () =>await askQuestion());
     userInput.addEventListener('keydown', async (e)=> {
       if (e.key === "Enter" && !e.shiftKey) await askQuestion()
     }, true);
     
     document.addEventListener('DOMContentLoaded', ()=> {
+      setTimeout(introduceChatbot, 500);
       userInput.focus();
     })
   </script>

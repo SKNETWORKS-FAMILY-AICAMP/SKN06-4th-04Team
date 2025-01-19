@@ -30,7 +30,7 @@ class BaseUserForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("email", "name", "birthdate", "phone_number", "profile_picture")
+        fields = ("email", "name", "birthdate", "phone_number")
         widgets = {
             "birthdate": forms.DateInput(attrs={"type": "date"}),
             "phone_number": forms.TextInput(attrs={"placeholder": "01011112222"}),

@@ -99,7 +99,7 @@
 
  <i>* 이전 프로젝트 → [Github Repository](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-3rd-4Team) </i>
 ### 이전 모델의 문제점
-
+- embedding vector의 차원수 초과 -> chunk사이즈 및 overlap 수치저하로 인한 문맥파악능력 저하
 - 세법 데이터를 각 조항별로 split 하였음 → 컨텍스트 부족으로 인한 부정확한 응답 발생.
    <br/>
    - 예) "개별소비세법 <u>제1조</u>를 알려줘!" 라는 질문에 응답하기 어려워 함. 할루시네이션 발견견.
@@ -111,8 +111,18 @@
    
    - 해결책: chunk기반으로 split하여 문맥을 읽히기로 함.
       - cf) prompt 로 해결해 보고자 하였으나 정확도가 낮음
+      - 72개의 파일을 7개의 폴더로 나눈 후 각 폴더별 embedding 후 빈 vector store에 차례대로 추가 및 저장.
+        
    - 결과: 매우 성공적!
 
+- 성능 평가 미흡
+   - precision, recall, relevency 확인시 정답내용을 임의적으로 선별함.
+   - 평가 데이터 부족, 몇가지 조항들로만 LLM모델 평가
+ 
+   - 해결책: RAGas평가 도입(평가용 chain을 구성 -> 평가 데이터로 사용할 context를 추출 -> 평가데이터셋 구성 -> RAGas평가)
+      - Hometax Q&A 와 LLM모델의 응답 비교
+      - LLM모델의 응답과 정답 context간의 문맥 유사도 비교
+      - BLEU, ROUGE Score 를 통한 평가
 
 ### 개선 내용
 1. **Chunk 기반 데이터 스플릿**
@@ -121,10 +131,16 @@
 
 2. **RAGas 도입**
    - 응답 속도 최적화 및 사용자의 요구에 따른 적응형 모델 구조.
+   - Q-A질문 쌍이 주어진 context에 얼마나 부합한지 재현율, 정밀도, 신뢰성, 적합성
 
 3. **벡터스토어 최적화**
    - Chroma Vectorstore의 효율적인 인덱싱 및 쿼리 처리 개선.
 
+4. **다양한 평가지표 도입**
+   - RAGas를 통한 context
+   - 홈텍스 내의 질의응답 게시판과 LLM모델의 답변 비교
+   - cos 유사도를 통한 질문과 LLM답변간의 문백 유사도 검증
+   - bleu스코어 및 rouge 스코어 검증 
 <br/>
 
 ## 4️⃣ 요구사항 정의서

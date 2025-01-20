@@ -1,7 +1,7 @@
 # ✍️ LLM 테스트 보고서
 ## 📌성능 검증 및 평가
 - **검증 방법:** 
-- OPENAI를 이용한 실제 법령에 명시된 내용에서 Q-A쌍 10개 추출 후 LLM의 답변과 정확성, 관련성, 신뢰성 등 평가 지표 설정 및 측정
+- chain을 통한 Q-A쌍 10개 추출 후 LLM의 답변과 재현율, 정밀도, 신뢰성, 적합성 등 평가 지표 설정 및 측정
 - 홈텍스 내의 질의응답 게시판과 LLM모델의 답변 비교
 - cos 유사도를 통한 질문과 LLM답변간의 문백 유사도 검증
 - bleu스코어 및 rouge 스코어 검증
@@ -112,7 +112,7 @@ print(f"RougeL점수:{rouge_scores['rougeL']}")
 
 ```
 - 결과<br/>
-<img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/q_a_10pair.png"> <br/>
+<img src="[https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/report/q_a_10pair.png]"> <br/>
 
 ## 지표 설명
 
@@ -196,7 +196,7 @@ response = rag_chain.invoke(query)
 
 ## 홈택스 답변
 
-<img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/result_img/hometax.png"><br/>
+<img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN06-4th-04Team/blob/main/report/hometax.png"><br/>
 
 ## 평가 결과
 

@@ -122,8 +122,8 @@
    - 해결책:
       - RAGas평가 도입(평가용 chain을 구성 -> 평가 데이터로 사용할 context를 추출 -> 평가데이터셋 구성 -> RAGas평가)
       - Hometax Q&A 와 LLM모델의 응답 비교
-      - LLM모델의 응답과 정답 context간의 문맥 유사도 비교
-      - BLEU, ROUGE Score 를 통한 평가
+      - LLM모델의 응답과 Hometax Q&A정답간의 문맥 유사도 비교
+      - LLM모델의 응답과 Hometax Q&A정답간의 BLEU, ROUGE Score 를 통한 평가
 
 ### 개선 내용
 1. **Chunk 기반 데이터 스플릿**
@@ -276,10 +276,13 @@ print(f"RougeL점수:{rouge_scores['rougeL']}")
 2. 신용카드 공제: 신용카드 사용금액 소득공제는 근로소득이 있는 거주자가 해당 과세연도에 사용한 금액에 대해 적용됩니다.취업 전 사용한 금액은 소득이 없었기 때문에 공제 대상이 아닐 수 있습니다.
 각 개인의 상황에 따라 다를 수 있으므로, 정확한 판단을 위해서는 세무 전문가와 상담하거나 국세청의 지침을 확인하는 것이 좋습니다. 이 답변은 세법 관련 정보를 바탕으로 작성되었으며, 구체적인 상황에 따라 전문가의 추가 조언이 필요할 수 있습니다. <br/>
 - 결과<br/>
-Semantic Similarity: 0.38 <br/><br/>
+Semantic Similarity: 0.59 <br/><br/>
 BLEU점수:0.00 <br/><br/>
 Rouge1점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575) <br/>
 RougeL점수:Score(precision=0.2, recall=0.5, fmeasure=0.28571428571428575) <br/>
+</br>
+- 결과해석
+     : answer rerlevancy 부분이 안좋게 평가가나왔다. 하지만 홈텍스Q&A 와 LLM모델의 Response가 같은 내용이었으나 문맥유사도 및 BLEU 점수가 0인것으로 보아 아직 같은 내용이어도 평가 모델들이 두 정답간의 내용적 의미를 잘 파악하지못하는것으로 보아 아직 모듈에서 제공하는 평가모델들이 문맥유사도 및 내용의 유사성을 잘 파악 못하는것 같다.
 
 ## 4️⃣ 요구사항 정의서
 

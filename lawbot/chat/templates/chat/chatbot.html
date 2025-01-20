@@ -43,11 +43,23 @@
 
       const messageBubble = document.createElement("div");
       messageBubble.classList.add("chat-bubble");
-      messageBubble.textContent = message;
+      messageBubble.innerHTML = message;
       messageElement.appendChild(messageBubble);
 
       return messageElement;
     }
+
+    function createMessageElement2(sender, message) {
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("message");
+      if (sender) {
+          messageElement.classList.add(sender);
+      }
+      // 메시지를 HTML로 처리
+      messageElement.innerHTML = message; 
+      return messageElement;
+  }
+
     function preventQuestion() {
       userInput.disabled = true;
       const buttons = document.querySelectorAll("div.chat-chip > button");
@@ -82,7 +94,6 @@
       scrollToBottomChat();
       userInput.value = "";
 
-      // userInput.disabled = true;
       try {
           const response = await fetch("/chat/get-answer", {
               method: "POST",
@@ -93,21 +104,17 @@
           });
   
           const data = await response.json();
+          data.answer = data.answer.replace(/\n/g, "<br>");
 
-          // const respondTime = getCurrentTime();
           const botMessage = createMessageElement(null, data.answer);
           chatBox.appendChild(botMessage);
       } catch (error) {
-          // const respondTime = getCurrentTime();
           const botMessage = createMessageElement(null, "알 수 없는 오류가 발생했습니다.");
           chatBox.appendChild(botMessage);
       }
-  
-      // userInput.disabled = false;
-      // userInput.focus();
       allowQuestion();
     }
-
+    
     function scrollToBottomChat() {
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -121,16 +128,6 @@
 
       userInput.focus();
     }
-
-
-//    function toggleQuestionAllowance() {
-//      userInput.disabled = !userInput.disabled;
-//      const buttons = document.querySelectorAll("div.chat-chip > button");
-//      buttons.forEach(button => {
-//          button.disabled = !button.disabled;
-//      });
-//    }
-
     /* 
       EventListener - submit
       1. '전송' 버튼 click시

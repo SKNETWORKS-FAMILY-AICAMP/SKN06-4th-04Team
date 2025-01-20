@@ -78,8 +78,8 @@ def load_process_split_doc(
     # split
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         model_name="gpt-4o",
-        chunk_size=1000,
-        chunk_overlap=100,
+        chunk_size=2000,
+        chunk_overlap=500,
     )
     split_docs = splitter.split_documents(update_docs)
 
@@ -119,8 +119,8 @@ def load_process_split_doc_law(
 
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         model_name="gpt-4o",
-        chunk_size=1000,
-        chunk_overlap=100,
+        chunk_size=2000,
+        chunk_overlap=500,
     )
     split_docs = splitter.split_documents(document_list)
 

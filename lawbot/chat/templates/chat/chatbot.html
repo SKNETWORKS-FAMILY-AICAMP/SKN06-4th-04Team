@@ -119,19 +119,15 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
     
-    function askKeywordChips(type) {
-      let chatText = `네, '${type}'에 대해서 안내해드리겠습니다! 어떤 점이 궁금하신가요? `
-      const botMessage = createMessageElement(null, chatText);
-
-      chatBox.appendChild(botMessage);
-      scrollToBottomChat();
-
+    async function askKeywordChips(type) {
+      await askQuestion(`${type}에 대해 알려줘!`)
       userInput.focus();
     }
+
     /* 
       EventListener - submit
       1. '전송' 버튼 click시
-      2. 'input#chat-input' 에 focus 잡힌 상태로로 enter 입력
+      2. 'input#chat-input' 에 focus 잡힌 상태로 enter 입력
     */
     sendButton.addEventListener("click", async () =>await askQuestion());
     userInput.addEventListener('keydown', async (e)=> {

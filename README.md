@@ -155,7 +155,7 @@
       - LLM모델의 응답과 홈텍스의 Q&A 정답간의 문맥 유사도 비교
       - LLM모델의 응답과 홈텍스의 Q&A 정답간의 BLEU, ROUGE Score 를 통한 평가
    - 결과: 매우 성공적!👌
-   - LLM 테스트 보고서 → [Chatbot README.md](/lawbot/chat/readme.md)
+   - LLM 테스트 보고서 → [Chatbot README.md](/lawbot/chat/README.md)
 
 
 ### 개선 내용 정리

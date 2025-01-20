@@ -181,6 +181,8 @@
 
 📍 <i>자세한 <u>**&lt;요구사항 정의서&gt;**</u>  문서 확인 → [Google sheet](https://docs.google.com/spreadsheets/d/1wKG5qj-1ep-ace8Mv8cm0a9_KxEt96GTHUgf0Eu_epk/edit?gid=0#gid=0) 참고 </i>
 
+![](</report/요구사항_정의서.png>)
+
 ### 필수 요구사항
 - 사용자 인증 및 권한 관리.
 - 회원정보 수정

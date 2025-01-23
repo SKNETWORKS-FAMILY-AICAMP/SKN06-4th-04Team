@@ -34,7 +34,7 @@
 |유경상|Django BE (chat 관련), 데이터 처리 및 RAG 모델 개선, LLM 모델 테스트|
 |노원재|Django BE (chat 관련), LLM 테스트, App 테스트|
 |전하연|Django BE (user 관련), 요구사항 정의서|
-|박서윤|Django BE (user 관련), 요구사항 정의서|
+|박서윤|Django BE (user 관련), 요구사항 정의서, 시스템구성도|
 <br/>
 
 ## 2️⃣ 주제 소개
